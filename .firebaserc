@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "smartcrc-28824": {
+      "hosting": {
+        "grrainoff": [
+          "smartcrc-28824"
+        ]
+      }
+    }
+  }
+}

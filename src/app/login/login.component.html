@@ -1,0 +1,314 @@
+<div class="image"> 
+ <div *ngIf="!renewal" > 
+  <!-- <div *ngIf=false > -->
+
+<div fxLayout="row" fxLayoutAlign="end start" style="position: absolute;top:3%;right:1%;width:100%;height: 25%">                                                         
+ 
+  <div >
+
+  <button mat-raised-button   style="background-color:orangered;color: white;font-size: 150%;font-family: Bitter" *ngIf=takelog&&showopt (click)=getreg() >Register</button>
+  </div>
+  <div >
+    <button mat-raised-button   style="background-color:orangered;color: white;font-size: 150%;font-family: Bitter" *ngIf=!takelog&&showopt (click)=getlog() >Login</button>
+   </div>
+     
+  </div>
+
+
+<!-- for phone auth
+<div id="recaptcha-container"></div>
+for phone auth-->
+<div class="container" fxLayout.lg="row" fxLayoutAlign="center center"
+  style="position: absolute;top:33%;width:100%;height: 25%"  *ngIf=takelog >
+  <mat-card fxFlex="25" >
+    <div fxLayout="column" fxLayoutAlign="center center" >
+      <img class="kkk" src="../src/assets/kkk.jpg" alt="SmartCRC">
+    <mat-card-title style="font-size: 350%;color:royalblue;font-family: Bitter" *ngIf=!reset>Login</mat-card-title>
+    <mat-card-title style="font-size: 200%;color:royalblue;font-family: Bitter" *ngIf=reset>PasswordReset</mat-card-title>
+  </div>
+    <mat-card-content *ngIf=!reset>
+      <form fxLayout="column" fxLayoutGap="10px" [formGroup]="loginform">
+
+        <mat-form-field fxFlex=5>
+          <input type="text" matInput placeholder="Enter your Email ID" formControlName="eid" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field fxFlex=5>
+          <input matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'"
+            formControlName="password" autocomplete="off">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+           
+
+            <img height="15" width="15" *ngIf="!hide"  src="../src/assets/visibility-black-18dp.svg">   
+                <img height="15" width="15" *ngIf="hide"  src="../src/assets/visibility_off-black-18dp.svg">
+          </button>
+        </mat-form-field>
+      </form>
+  
+
+   
+     
+
+
+      <div style="padding-bottom: 10%"></div>
+
+    
+      <div fxLayout="row" fxLayoutAlign="space-between center" >
+        <label style="font-family: Bitter;font-size: 100%;" (click)="this.reset=true;this.resetemail.reset()" ><b>ForgotPassword?...</b></label>
+     <button mat-raised-button [disabled]="loginform.invalid" 
+          style="background-color:royalblue;color: white;font-size: 150%;font-family: Bitter" 
+          (click)=login()>Login</button>
+
+      </div>
+  
+
+  </mat-card-content>
+
+  <mat-card-content *ngIf=reset>
+      <label>Reset Your Password </label>
+        <form fxLayout="column" fxLayoutGap="10px" [formGroup]="resetemail">
+  
+
+          <mat-form-field fxFlex=50>
+            <input matInput placeholder="Enter your New password" [type]="hide ? 'password' : 'text'" formControlName="pass"
+              autocomplete="off">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+           
+
+              <img height="15" width="15" *ngIf="!hide"  src="../src/assets/visibility-black-18dp.svg">   
+              <img height="15" width="15" *ngIf="hide"  src="../src/assets/visibility_off-black-18dp.svg">
+            </button>
+          </mat-form-field>
+
+          <mat-form-field fxFlex=50>
+            <input matInput placeholder="Re-enter your New password" [type]="hide ? 'password' : 'text'" formControlName="repass"
+              autocomplete="off">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+             
+
+            <img height="15" width="15" *ngIf="!hide"  src="../src/assets/visibility-black-18dp.svg">   
+            <img height="15" width="15" *ngIf="hide"  src="../src/assets/visibility_off-black-18dp.svg">
+            </button>
+            <mat-hint align="start" *ngIf="this.errmess!=null&&this.errmess=='Password is Not Matching'" style="color: red;font-size: 15px;" >{{this.errmess}}</mat-hint>
+            <mat-hint align="start" *ngIf="this.errmess!=null&&this.errmess=='Password Matched'" style="color: green;font-size: 15px;" >{{this.errmess}}</mat-hint>
+          
+          </mat-form-field>
+  
+         
+        </form>
+
+        <div style="padding-bottom: 10%"></div>
+
+    
+        <div fxLayout="row" fxLayoutAlign="space-between center" >
+            <button mat-raised-button
+            style="background-color:royalblue;color: white;font-size: 150%;font-family: Bitter" 
+            (click)="this.reset=false;this.loginform.reset();this.resetemail.reset();">Back</button>
+          <button mat-raised-button [disabled]="this.resetemail.invalid||this.errmess==null||this.errmess=='Password is Not Matching'"
+            style="background-color:royalblue;color: white;font-size: 150%;font-family: Bitter" 
+            (click)="passwordreset()" >Reset</button>
+  
+        </div>
+  </mat-card-content>
+
+
+  </mat-card>
+
+</div>
+
+<div>
+
+  <div class="container" fxLayout.lg="row" fxLayoutAlign="center center"
+    style="position: absolute;top:33%;width:100%;height: 25%" *ngIf=takereg>
+    <mat-card fxFlex="70" style="border: 1px solid black ">
+      <mat-card-title style="font-size: 350%;color:royalblue;font-family: Bitter">Register-TSC</mat-card-title>
+      <mat-card-content>
+
+
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="regfpform">
+
+          <mat-form-field fxFlex=50>
+            <input type="text" matInput placeholder="User Fullname" formControlName="fullname" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field fxFlex=50>
+            <input type="text" matInput placeholder="Mobile No" formControlName="phone" autocomplete="off">
+          </mat-form-field>
+
+        </form>
+
+       
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="regepform">
+          <mat-form-field fxFlex=50>
+            <input type="text" matInput placeholder="Enter your Email ID" formControlName="eid" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field fxFlex=50>
+            <input matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'" formControlName="password"
+              autocomplete="off">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+         
+              <img height="15" width="15" *ngIf="!hide"  src="../src/assets/visibility-black-18dp.svg">   
+              <img height="15" width="15" *ngIf="hide"  src="../src/assets/visibility_off-black-18dp.svg">
+            </button>
+          </mat-form-field>
+        </form>
+          
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="regsdform">
+          <mat-form-field  fxFlex="50">
+            <input type="text" placeholder="State" aria-label="State" matInput formControlName="state"  [matAutocomplete]="state">
+            <mat-autocomplete #state="matAutocomplete" [displayWith]="displayFn" >
+              <mat-option *ngFor="let stateoption of sfilteredOptions | async" [value]="stateoption.value">
+                {{stateoption.value}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+
+         <mat-form-field  fxFlex="50">
+            <input type="text" placeholder="District" aria-label="District" matInput formControlName="district"  [matAutocomplete]="district">
+            <mat-autocomplete #district="matAutocomplete" [displayWith]="displayFn" >
+              <mat-option *ngFor="let districtoption of dfilteredOptions | async" [value]="districtoption.value">
+                {{districtoption.value}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          
+        </form>
+
+
+
+        
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="regtaform">
+          <mat-form-field  fxFlex="50">
+            <input type="text" placeholder="Taluk" aria-label="Taluk" matInput formControlName="taluk"  [matAutocomplete]="taluk">
+            <mat-autocomplete #taluk="matAutocomplete" [displayWith]="displayFn" >
+              <mat-option *ngFor="let talukoption of tfilteredOptions | async" [value]="talukoption.value">
+                {{talukoption.value}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+
+          <mat-form-field fxFlex=50>
+            <input type="text" matInput placeholder="Enter TSC Name" formControlName="tsc" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <mat-select placeholder="Authority" formControlName="authority">
+              <mat-option value="SEO">SEO</mat-option>
+              <mat-option value="ADS">ADS</mat-option>
+              <mat-option value="DDS">DDS</mat-option>
+            </mat-select>
+            <mat-hint align="end">Select Authority</mat-hint>
+          </mat-form-field> 
+          
+
+         
+
+         
+        </form>
+       
+
+
+
+        
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="secret" fxLayoutAlign="center center"  *ngIf="getsecret"  >
+
+          <mat-form-field fxFlex=50>
+            <input matInput placeholder="Enter Secret Key" [type]="hide ? 'password' : 'text'"
+              formControlName="secret" autocomplete="off">
+            
+          </mat-form-field>
+
+         
+
+        </form>
+
+
+
+       
+
+      </mat-card-content>
+      <mat-card-actions fxLayout="column" fxLayoutAlign="center end">
+       
+        <button mat-raised-button *ngIf="getsecret" 
+          [disabled]="regfpform.invalid||regsdform.invalid||regepform.invalid||regtaform.invalid||secret.invalid"
+          style="background-color:royalblue;color: white;font-size: 150%;font-family: Bitter"
+          (click)=Register()>Register</button>
+
+
+        <button mat-raised-button *ngIf="!getsecret"
+          [disabled]="regfpform.invalid||regsdform.invalid||regepform.invalid||regtaform.invalid"
+          style="background-color:royalblue;color: white;font-size: 150%;font-family: Bitter"
+          (click)=Register()>Register</button>
+
+      </mat-card-actions>
+
+    </mat-card>
+
+  </div>
+</div>
+
+</div>
+ <div *ngIf="renewal">
+  <!-- <div *ngIf=true> -->
+
+    <div class="container" fxLayout.lg="row" fxLayoutAlign="center center"
+    style="position: absolute;top:28%;width:100%;height: 25%" >
+  
+    <mat-card fxFlex="50" style="border: 1px solid black ">
+      <mat-card-title style="font-size: 25px;color:royalblue;font-family: Bitter">Renewal-TSC</mat-card-title>
+      <mat-card-content>
+<div  fxFlex="50">
+  <img height="100%" width="125%" src="../src/assets/expired-02.jpg">
+</div>
+<div  fxFlex="50">
+<label>Oops! Your Subcription has been Expired...</label><br>
+<label>
+ For Renewal Please Contact RUHM Customer Care
+</label>
+
+<div style="padding-top: 5%;"></div>
+<form fxLayout="row" fxLayoutAlign="center center" [formGroup]="renewalform">
+
+  <mat-form-field fxFlex=70>
+    <input type="text" matInput placeholder="Renewal Code" formControlName="renewal" autocomplete="off">
+  </mat-form-field>
+
+  
+
+</form>
+<div style="padding-top: 5%;"></div>
+<form fxLayout="row" fxLayoutAlign="center center" >
+
+  
+  <button mat-raised-button  
+   style="background-color:orangered;color: white;font-size: 150%;font-family: Bitter" 
+   [disabled]="renewalform.invalid" (click)=renew() >
+    Renew</button>
+  
+
+  
+
+</form>
+
+</div>
+      </mat-card-content>
+    </mat-card>
+
+
+  </div>
+
+</div>
+<div fxLayout="column" fxLayoutAlign="end end"  style="position: absolute;top:90%;width:100%;">
+  <img height="5%" width="10%" src="../src/assets/powered.png">
+</div>
+</div>

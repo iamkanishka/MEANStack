@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+
+@font-face{
+    font-family: 'lato';
+    src:url('../src/assets/fonts/Lato-Regular.ttf')
+
+
+}
+
+
+@font-face{
+    font-family: 'Roboto';
+    src:url('../src/assets/fonts/Roboto-Regular.ttf')
+}
+
+
+
+@font-face{
+    font-family: 'PT Sans';
+    src:url('../src/assets/fonts/PTSans-Regular.ttf')
+}
+
+@font-face{
+    font-family: 'Changa';
+    src:url('../src/assets/fonts/Changa-Regular.ttf')
+}
+
+
+
+@font-face{
+    font-family: 'Bitter';
+    src:url('../src/assets/fonts/Bitter-Regular.ttf')
+}
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: lato, "Helvetica Neue", sans-serif; }
+

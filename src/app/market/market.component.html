@@ -1,0 +1,654 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+      <mat-toolbar style="color: green"><span style="font-size: 125%">Dashboard</span></mat-toolbar>
+      <mat-nav-list>
+          <a mat-list-item routerLink="/Farmers" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/supervisor_account-black-18dp.svg">&nbsp;Farmers
+          </a>
+        
+          <a mat-list-item routerLink="/MulberyReport" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/eco-black-18dp.svg">&nbsp;Mulberry Report
+          </a>
+
+
+          <a mat-list-item routerLink="/MarketReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/storefront-black-18dp.svg">&nbsp;Market Report</a>
+          <a mat-list-item routerLink="/CropReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/rule_folder-black-18dp.svg">&nbsp;Indents</a>
+       
+
+      </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      <div style="margin-left: 10px;margin-right:10px">
+          <mat-toolbar style="background-color: lightgreen;font-size: 200%">
+              <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+                  *ngIf="isHandset$ | async">
+            
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/menu-black-18dp.svg">
+
+              </button>
+              <span style="color: green;;font-family: Bitter;">Market Report</span>
+              <span fxFlex></span>
+
+              <button mat-icon-button routerLink="/home" routerLinkActive="active">
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/home-black-18dp.svg">
+              </button>
+
+
+          </mat-toolbar>
+      </div>
+
+
+      <div style="margin-top: 10px;margin-left: 20px;margin-right: 20px">
+
+          <mat-card style="background-color:white;border :1.5px solid green" fxLayout="row"
+              fxLayoutAlign="space-between center">
+
+              <mat-form-field fxFlex="35">
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+              </mat-form-field>
+
+              <!-- <div fxLayout="column" fxLayoutAlign="center end">
+         -->
+
+              <!-- 
+
+
+              <div>
+                  <button mat-button style="background-color:royalblue;color: white;font-size: 120%"
+                  (click)="this.addinfo=true;" >Add Indent</button>
+                  
+                  </div> -->
+                  <div>
+                    <button mat-button style="background-color:orangered;color: white;font-size: 120%"
+                        (click)="this.download=true">Download Report</button>
+                </div>
+
+
+          </mat-card>
+
+
+
+
+          <div class="example-container mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort>
+
+
+
+                  <!-- FirstName Column -->
+                  <ng-container matColumnDef="fullname">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Farmer<br>fullname</th>
+                      <td mat-cell *matCellDef="let row"> {{row.fullname}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="fid">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>FID</th>
+                      <td mat-cell *matCellDef="let row"> {{row.fid}} </td>
+
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="village">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Village</th>
+                      <td mat-cell *matCellDef="let row"> {{row.village}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="dfls">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Variety<br>(DFLS)</th>
+                      <td mat-cell *matCellDef="let row"> {{row.variety}}<br>({{row.dfls}}) </td>
+
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="date">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                      <td mat-cell *matCellDef="let row"> {{row.date}} </td>
+
+                  </ng-container>
+
+<!-- 
+                  <ng-container matColumnDef="village">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Village </th>
+                      <td mat-cell *matCellDef="let row"> {{row.village}} </td>
+
+                  </ng-container> -->
+
+                  <ng-container matColumnDef="lotno">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>LOT_No</th>
+                      <td mat-cell *matCellDef="let row"> {{row.lotno}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="crc">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Source<br>(CRC_Name)</th>
+                      <td mat-cell *matCellDef="let row"> {{row.source}}<br>({{row.crcname}}) </td>
+                  </ng-container>
+
+
+
+                  <ng-container matColumnDef="hdate">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hatching<br>Date</th>
+                      <td mat-cell *matCellDef="let row"> {{row.realhdate}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ddate">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dispatch<br>Date</th>
+                      <td mat-cell *matCellDef="let row"> {{row.realddate}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="subsidy">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total<br>(Subsidy)</th>
+                      <td mat-cell *matCellDef="let row"> {{row.total}}<br>({{row.subsidy}})</td>
+                  </ng-container>
+                  
+
+                  <ng-container matColumnDef="fshare">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Farmer<br>Share</th>
+                      <td mat-cell *matCellDef="let row"> {{row.fshare}}</td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="avg">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>AVG</th>
+                      <td mat-cell *matCellDef="let row"> {{row.avg}}</td>
+                  </ng-container>
+
+                  
+                  <ng-container matColumnDef="market">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Market</th>
+                      <td mat-cell *matCellDef="let row"> {{row.market}}</td>
+                  </ng-container>
+                  
+
+                  <ng-container matColumnDef="mardate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Market<br>Date</th>
+                    <td mat-cell *matCellDef="let row"> {{row.realmardate}}</td>
+                </ng-container>
+
+
+
+
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                  </tr>
+              </table>
+
+          </div>
+
+
+          <mat-paginator [pageSizeOptions]="[8, 20, 25, 100]" [pageSize]="8"
+              style="color: black;border-bottom: 2px outset green; " showFirstLastButtons></mat-paginator>
+
+
+      </div>
+
+
+
+
+      <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:25%;width:100%;height: 25%"
+          *ngIf=download>
+          <mat-card fxFlex="30" style="border: 2px solid royalblue">
+
+              <mat-card-title><label class="mat-display-2"
+                      style="color: green;font-family:Bitter">Download Report</label>
+              </mat-card-title>
+
+              <mat-card-content>
+                  <form fxLayout="row" fxLayoutAlign="center center" [formGroup]="monyear">
+
+
+
+                      <mat-form-field fxFlex="80">
+                          <mat-label>Choose Month(Year)</mat-label>
+                          <mat-select formControlName="monyear">
+                              <mat-option *ngFor="let food of chooseopt" [value]="food">
+                                  {{food.month}}({{food.year}})
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+
+
+                  </form>
+
+
+              </mat-card-content>
+              <mat-card-actions>
+                  <div fxLayout="row" fxLayoutAlign="space-between center">
+                      <button mat-button style="color: black;background-color: white"
+                          (click)="this.download=false;this.monyear.reset()">
+                          <img height="25" width="25" src="../src/assets/cancel-black-18dp.svg">Cancel
+                      </button>
+
+                      <button mat-button style="color: white;background-color: orangered" [disabled]="monyear.invalid"
+                          (click)="downloadreport()">
+                          <img height="25" width="25" src="../src/assets/description-black-18dp.svg">Download
+                      </button>
+
+                  </div>
+              </mat-card-actions>
+
+          </mat-card>
+      </div> 
+
+
+
+
+
+
+
+     <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:18%;width:100%;height: 25%"
+          *ngIf=addinfo>
+          <mat-card fxFlex="60" style="border: 2px solid royalblue">
+              <mat-card-title ><label class="mat-display-2" style="color: green">{{headstring}}</label>
+              </mat-card-title>
+
+
+
+
+
+              <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="fivform">
+        
+
+                 
+        
+                       
+                  <mat-form-field fxFlex="50">
+                      <input matInput placeholder="Fullname" autocomplete="off" formControlName="fullname"  readonly >
+                    </mat-form-field>
+        
+        
+                  
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="Phone Number" autocomplete="off" formControlName="phone" readonly>
+                  </mat-form-field>
+       
+        
+        
+                </form>
+
+              <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="vpdform">
+        
+
+                <mat-form-field fxFlex="50">
+                  <input matInput placeholder="Variety" autocomplete="off" formControlName="variety" readonly>
+                </mat-form-field>
+
+        
+        
+                 
+        
+        
+                  
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="Price" autocomplete="off" formControlName="price" readonly>
+                  </mat-form-field>
+        
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="DFLS quantity" autocomplete="off" formControlName="dfls">
+                  </mat-form-field>
+        
+        
+                
+        
+        
+        
+                </form>
+        
+                <form fxLayout="row" fxLayoutGap="30px" [formGroup]="shlform">
+             
+        
+             
+        
+                  <mat-form-field fxFlex="50">
+                    <input matInput [matDatepicker]="hpicker" formControlName="hdate" autocomplete="off"
+                      placeholder="Hatching Date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="hpicker" [disabled]="true"></mat-datepicker-toggle>
+                    <mat-datepicker #hpicker></mat-datepicker>
+                  </mat-form-field>
+        
+         
+                  <mat-form-field fxFlex="50">
+                    <input matInput [matDatepicker]="laidpicker" formControlName="ddate" autocomplete="off"
+                      placeholder="Dispatch date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="laidpicker" [disabled]="true"></mat-datepicker-toggle>
+                    <mat-datepicker #laidpicker></mat-datepicker>
+                  </mat-form-field>
+        
+        
+ 
+        
+                  <mat-form-field  fxFlex="50">
+                    <input type="text" placeholder="Expected Market" aria-label="Expected Market" matInput formControlName="market"  [matAutocomplete]="marauto">
+                    <mat-autocomplete #marauto="matAutocomplete" [displayWith]="displayFn" >
+                      <mat-option *ngFor="let maroption of mfilteredOptions | async" [value]="maroption.value">
+                        {{maroption.value}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+
+
+
+        
+                </form>
+        
+        
+        
+                <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="lmcform">
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="LOT Number" autocomplete="off" formControlName="lotno" readonly>
+                  </mat-form-field>
+        
+                  <mat-form-field fxFlex="50">
+                    <input matInput [matDatepicker]="marpicker" formControlName="mardate" autocomplete="off"
+                      placeholder="Market Date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="marpicker" [disabled]="true"></mat-datepicker-toggle>
+                    <mat-datepicker #marpicker></mat-datepicker>
+                  </mat-form-field>
+        
+        
+        
+               
+        
+        
+                </form>
+        
+                <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="scform">
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="Source" autocomplete="off" formControlName="source" readonly>
+                  </mat-form-field>
+        
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="CRC Name" autocomplete="off" formControlName="crc" readonly>
+                  </mat-form-field>
+        
+        
+        
+                  <mat-form-field fxFlex="50">
+                    <input matInput placeholder="Subsidy" autocomplete="off" formControlName="subsidy" >
+                  </mat-form-field>
+               
+        
+        
+                </form>
+        
+                <mat-card-actions mat-footer-row fxLayout="row" fxLayoutAlign="space-between center">
+         
+                  <button mat-button style="color: black;background-color: whitesmoke"  (click)="closeup()">
+                    <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Close
+                  </button>
+                  <button mat-button style="color: black;background-color: orangered" (click)="updatedata()" >
+                    <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">{{this.aus}}
+                  </button>
+              
+          
+                  
+                </mat-card-actions>
+        
+
+
+          </mat-card>
+
+      </div>
+
+
+
+
+
+
+
+      
+  <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:21%;width:100%;height: 25%"
+  *ngIf=takeorder>
+  <mat-card fxFlex="60" style="border: 1px solid black" >
+    <mat-card-title *ngIf="!getcus"><label class="mat-display-2" style="color: green">Placing Order</label>
+
+    </mat-card-title>
+
+    <mat-card-title *ngIf="getcus"><label class="mat-display-2" style="color: green">Placing Order to {{orderingcus.fullname}}</label>
+
+    </mat-card-title>
+   
+
+<div *ngIf="!getcus" >
+
+
+
+<form fxLayout="row" fxLayoutAlign="center center"  fxLayoutGap="30px" [formGroup]="getnumform">
+<mat-form-field fxFlex="30" appearance="outline">
+  <mat-label>Enter Customer Number</mat-label>
+  <input matInput placeholder="Enter Customer Number" autocomplete="off" formControlName="getcusno">
+  <mat-hint align="start" *ngIf="this.showphstat"  style="color: red;" >{{this.showphmes}}</mat-hint>
+
+</mat-form-field>
+</form>
+
+<mat-card-actions fxLayout="row" fxLayoutAlign="center center" *ngIf=!getcus>
+<button mat-button style="color: black;background-color: whitesmoke;border: 1px solid black;"
+  (click)="closp()"
+  >
+  <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+</button>
+</mat-card-actions>
+
+
+</div>
+
+
+
+
+
+<div *ngIf="getcus" >
+
+  
+
+
+
+
+    <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="fivform">
+        
+
+                 
+        
+                       
+      <mat-form-field fxFlex="50">
+          <input matInput placeholder="Fullname" autocomplete="off" formControlName="fullname" readonly  >
+        </mat-form-field>
+
+
+      
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Phone Number" autocomplete="off" formControlName="phone"  readonly>
+      </mat-form-field>
+
+
+
+    </form>
+
+  <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="vpdform">
+
+
+    <mat-form-field fxFlex="50" >
+      <mat-label>Variety</mat-label>
+      <mat-select formControlName="variety"  >
+        <mat-option *ngFor="let food of foods" [value]="food.value">
+          {{food.viewValue}}
+        </mat-option>
+      </mat-select>
+      <mat-hint align="end">Select Variety</mat-hint>
+    </mat-form-field>
+
+
+
+     
+
+
+      
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Price" autocomplete="off" formControlName="price" >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="DFLS quantity" autocomplete="off" formControlName="dfls">
+      </mat-form-field>
+
+
+    
+
+
+
+    </form>
+
+    <form fxLayout="row" fxLayoutGap="30px" [formGroup]="shlform">
+ 
+
+ 
+
+      <mat-form-field fxFlex="50">
+        <input matInput [matDatepicker]="hpicker" formControlName="hdate" autocomplete="off"
+          placeholder="Hatching Date" >
+        <mat-datepicker-toggle matSuffix [for]="hpicker" ></mat-datepicker-toggle>
+        <mat-datepicker #hpicker></mat-datepicker>
+      </mat-form-field>
+
+
+      <mat-form-field fxFlex="50">
+        <input matInput [matDatepicker]="laidpicker" formControlName="ddate" autocomplete="off"
+          placeholder="Dispatch date" >
+        <mat-datepicker-toggle matSuffix [for]="laidpicker" ></mat-datepicker-toggle>
+        <mat-datepicker #laidpicker></mat-datepicker>
+      </mat-form-field>
+
+
+<!--      
+      <mat-form-field fxFlex="50">
+        <mat-select placeholder="Expected Market" formControlName="market">
+          <mat-option value="P1">P1</mat-option>
+          <mat-option value="P2">P2</mat-option>
+        
+        </mat-select>
+        <mat-hint align="end">Select Market</mat-hint>
+      </mat-form-field>  -->
+
+      <mat-form-field  fxFlex="50">
+        <input type="text" placeholder="Expected Market" aria-label="Expected Market" matInput formControlName="market"  [matAutocomplete]="marauto">
+        <mat-autocomplete #marauto="matAutocomplete" [displayWith]="displayFn" >
+          <mat-option *ngFor="let maroption of mfilteredOptions | async" [value]="maroption.value">
+            {{maroption.value}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+
+
+
+
+    </form>
+
+
+
+    <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="lmcform">
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="LOT Number" autocomplete="off" formControlName="lotno" >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="50">
+        <input matInput [matDatepicker]="marpicker" formControlName="mardate" autocomplete="off"
+          placeholder="Market Date" >
+        <mat-datepicker-toggle matSuffix [for]="marpicker" ></mat-datepicker-toggle>
+        <mat-datepicker #marpicker></mat-datepicker>
+      </mat-form-field>
+
+
+
+    
+   
+
+
+    </form>
+
+    <form fxLayout="row"  fxLayoutGap="30px" [formGroup]="scform">
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Source" autocomplete="off" formControlName="source" >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="CRC Name" autocomplete="off" formControlName="crc" >
+      </mat-form-field>
+
+
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Subsidy" autocomplete="off" formControlName="subsidy" >
+      </mat-form-field>
+   
+
+
+    </form>
+
+    <mat-card-actions mat-footer-row fxLayout="row" fxLayoutAlign="space-between center">
+
+      <!-- <button mat-button style="color: black;background-color: whitesmoke"  (click)="
+      this.lmcform.reset();
+      this.fivform.reset();
+      this.shlform.reset();
+      this.vpdform.reset();
+      this.scform.reset();this.takeorder=false;this.chanme=true;this.getcus=true" *ngIf="!chanme" >
+        <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+      </button> -->
+
+     <button mat-button style="color: black;background-color: whitesmoke"  (click)="canceladd()" >
+        <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+      </button>
+
+      
+  
+      <button mat-button style="color: black;background-color: orangered" 
+      [disabled]="lmcform.invalid||
+   fivform.invalid||
+   shlform.invalid||
+   vpdform.invalid||
+   scform.invalid" (click)="dispatch()"
+     >
+     <img  height="30" width="30" src="../src/assets/shopping_cart-black-18dp.svg">Place Order
+    </button> 
+
+    <!--
+    "this.bvpform.reset();this.hdwform.reset();this.mdlform.reset();this.scaform.reset();this.dsform.reset();this.lmform.reset();this.getcus=false;this.getnumform.reset()
+-->
+
+
+
+    </mat-card-actions>
+
+
+
+
+</div>
+
+
+<!-- 
+   
+    <mat-card-actions fxLayout="row" fxLayoutAlign="end end" *ngIf=getcus>
+      <button mat-button style="color: black;background-color: whitesmoke;border: 1px solid black;"
+        (click)="this.bvpform.reset();this.hdwform.reset();this.mdlform.reset();this.scaform.reset();this.dsform.reset();this.lmform.reset();this.getcus=false;this.getnumform.reset()" >
+        <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+      </button>
+     
+     
+
+    </mat-card-actions> -->
+  </mat-card>
+
+</div>
+
+
+
+
+
+
+      <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

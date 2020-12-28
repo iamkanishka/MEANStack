@@ -1,0 +1,77 @@
+.sidenav-container {
+    height: 100%;
+  }
+  
+  .sidenav {
+    width: 200px;
+  
+  
+  }
+  
+  .sidenav .mat-toolbar {
+    background: lightgreen;
+  }
+  
+  .mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  
+  #nana{
+  
+    margin-left:50px;
+    margin-right:50px;
+
+  }
+  .example-container {
+      height: 359px;
+     overflow: auto;
+     
+     
+    }
+    table {
+      width: 100%;
+    }
+  
+    // .mat-card:hover {
+    //   background-color: yellow;
+    // }
+  
+    .success-dialog {
+      color:green ;
+      background-color: white;
+  }
+  
+  .example-container-cus {
+    height: 375px;
+   overflow: auto;
+   
+   
+  }
+  
+  .kakak{ 
+  height: 1%;
+  }
+
+
+
+
+  .image{
+    height:100%; 
+    background-size:cover;
+    width:auto;
+    
+    background-image:url('../../assets/mysilk.jpg');
+    background-position:50% 50%;
+  }
+  
+
+
+  .avatar {
+    vertical-align: text-top;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }

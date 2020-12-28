@@ -1,0 +1,190 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+      <mat-toolbar style="color: green"><span style="font-size: 125%">Dashboard</span></mat-toolbar>
+      <mat-nav-list>
+          <a mat-list-item routerLink="/Farmers" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/supervisor_account-black-18dp.svg">&nbsp;Farmers
+          </a>
+        
+          <a mat-list-item routerLink="/MulberyReport" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/eco-black-18dp.svg">&nbsp;Mulberry Report
+          </a>
+
+
+          <a mat-list-item routerLink="/MarketReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/storefront-black-18dp.svg">&nbsp;Market Report</a>
+          <a mat-list-item routerLink="/CropReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/rule_folder-black-18dp.svg">&nbsp;Indents</a>
+        
+      </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      <div style="margin-left: 10px;margin-right:10px">
+          <mat-toolbar style="background-color: lightgreen;font-size: 200%">
+              <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+                  *ngIf="isHandset$ | async">
+            
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/menu-black-18dp.svg">
+
+              </button>
+              <span style="color: green;;font-family: Bitter;">Mulberry Report</span>
+              <span fxFlex></span>
+
+              <button mat-icon-button routerLink="/home" routerLinkActive="active">
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/home-black-18dp.svg">
+              </button>
+
+
+          </mat-toolbar>
+      </div>
+  
+  
+      <div style="margin-top: 10px;margin-left: 20px;margin-right: 20px">
+  
+        <mat-card style="background-color:white;border :1.5px solid green" fxLayout="row" fxLayoutAlign="space-between ">
+  
+          <mat-form-field fxFlex="35">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+          </mat-form-field>
+  
+          <div fxLayout="column" fxLayoutAlign="center end">
+            <div >
+             <button mat-button style="background-color:royalblue;color: white;font-size: 120%" 
+            (click)="this.download=true"  >Download Report</button></div>
+           
+           </div>
+        </mat-card>
+  
+  
+  
+  
+        <div class="example-container mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" matSort>
+  
+  
+  
+            <!-- FirstName Column -->
+            <ng-container matColumnDef="firstname">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Fullname </th>
+              <td mat-cell *matCellDef="let row"> {{row.fullname}} </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Mobile No </th>
+                <td mat-cell *matCellDef="let row"> {{row.phone}} </td>
+    
+              </ng-container>
+  
+           
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                <td mat-cell *matCellDef="let row"> {{row.date}} </td>
+    
+              </ng-container>
+
+
+            <!-- <ng-container matColumnDef="village">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Village </th>
+                <td mat-cell *matCellDef="let row"> {{row.village}} </td>
+    
+              </ng-container> -->
+<!--   
+  <ng-container matColumnDef="gram">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gram<br>Panchayat </th>
+              <td mat-cell *matCellDef="let row"> {{row.gram}} </td>
+            </ng-container>
+   -->
+  
+            <ng-container matColumnDef="land">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Mulland<br>Added/Removed </th>
+              <td mat-cell *matCellDef="let row"><div  *ngIf="row.muladdremo<0" style="color:red" > {{row.muladdremo}}</div> <div *ngIf="row.muladdremo>0" style="color:green"> +{{row.muladdremo}}</div> </td>
+            </ng-container>
+  
+            
+  
+            <ng-container matColumnDef="monyear">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Month(Year)</th>
+                <td mat-cell *matCellDef="let row"> {{row.month}}({{row.year}}) </td>
+              </ng-container>
+  
+            <ng-container matColumnDef="surveyno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Survey NO</th>
+              <td mat-cell *matCellDef="let row"> {{row.surveyno}} </td>
+            </ng-container>
+  
+           
+  
+  
+         
+  
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+  
+        </div>
+  
+  
+        <mat-paginator [pageSizeOptions]="[8, 20, 25, 100]" [pageSize]="8"
+          style="color: black;border-bottom: 2px outset green; " showFirstLastButtons></mat-paginator>
+  
+  
+      </div>
+  
+   
+  
+  
+      <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:25%;width:100%;height: 25%"
+        *ngIf=download>
+      <mat-card fxFlex="30" style="border: 2px solid royalblue">
+  
+          <mat-card-title><label class="mat-display-2" style="color: green;font-family: 'PT Sans', sans-serif;">Download Report</label>
+          </mat-card-title>
+  
+          <mat-card-content>
+            <form fxLayout="row" fxLayoutAlign="center center" [formGroup]="monyear">
+           
+
+
+              <mat-form-field fxFlex="80" >
+                <mat-label>Choose Month(Year)</mat-label>
+                <mat-select formControlName="monyear" >
+                  <mat-option *ngFor="let food of chooseopt" [value]="food">
+                    <!-- {{food.month}}({{food.year}}) -->
+                    {{food}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+    
+            
+            </form>
+
+
+          </mat-card-content>
+          <mat-card-actions>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <button mat-button style="color: black;background-color: white"
+              (click)="this.download=false;this.monyear.reset()">
+              <img height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+             </button> 
+  
+              <button mat-button style="color: white;background-color: orangered" [disabled]="monyear.invalid"
+               (click)="downloadreport()">
+               <img height="30" width="30" src="../src/assets/description-black-18dp.svg">Download
+              </button>
+  
+            </div>
+          </mat-card-actions>
+  
+        </mat-card> 
+      </div>
+  
+  
+  
+  
+  
+  
+      <!-- Add Content Here -->
+    </mat-sidenav-content>
+  </mat-sidenav-container>

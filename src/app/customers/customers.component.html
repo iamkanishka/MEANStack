@@ -1,0 +1,922 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+      <mat-toolbar style="color: green"><span style="font-size: 125%">Dashboard</span></mat-toolbar>
+      <mat-nav-list>
+          <a mat-list-item routerLink="/Farmers" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/supervisor_account-black-18dp.svg">&nbsp;Farmers
+          </a>
+        
+          <a mat-list-item routerLink="/MulberyReport" style="color: green; font-size:125%;font-family: Bitter;">
+              <img height="30" width="30" src="../src/assets/eco-black-18dp.svg">&nbsp;Mulberry Report
+          </a>
+
+
+          <a mat-list-item routerLink="/MarketReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/storefront-black-18dp.svg">&nbsp;Market Report</a>
+          <a mat-list-item routerLink="/CropReport" style="color: green; font-size:125%;font-family: Bitter;"><img height="30" width="30" src="../src/assets/rule_folder-black-18dp.svg">&nbsp;Indents</a>
+        
+
+      </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      <div style="margin-left: 10px;margin-right:10px">
+          <mat-toolbar style="background-color: lightgreen;font-size: 200%">
+              <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+                  *ngIf="isHandset$ | async">
+            
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/menu-black-18dp.svg">
+
+              </button>
+              <span style="color: green;;font-family: Bitter;">Farmers</span>
+              <span fxFlex></span>
+
+              <button mat-icon-button routerLink="/home" routerLinkActive="active">
+                  <img aria-label="Side nav toggle" height="30" width="30" src="../src/assets/home-black-18dp.svg">
+              </button>
+
+
+          </mat-toolbar>
+      </div>
+
+
+
+    <div style="margin-top: 10px;margin-left: 20px;margin-right: 20px">
+
+      <mat-card style="background-color:white;border :1.5px solid green" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <mat-form-field fxFlex="35">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search Farmer">
+        </mat-form-field>
+
+        <button mat-button style="color: black;background-color: orangered"
+        (click)="allloadreport()" >
+        <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">Download All Kulavaru
+      </button>
+
+
+        <div fxLayout="column" fxLayoutAlign="center end">
+          <div *ngIf="ordbut">
+           <button mat-button style="background-color:royalblue;color: white;font-size: 120%" 
+             (click)="this.ordbut=false;this.ordphone=true;">Add Farmer</button></div>
+           <div *ngIf="ordphone" fxLayout="row" fxLayoutGap="10px" >
+ 
+            
+            <form  [formGroup]="pppform">
+              <mat-form-field fxFlex="100" >
+                <input matInput  placeholder="Farmer FID"   formControlName="cscheck"  autocomplete="off">
+              </mat-form-field>
+            </form>
+     
+           <button mat-button style="background-color:royalblue;color: white;font-size: 120%"  [disabled]="pppform.invalid"
+           (click)="checkbefore();">Check</button>
+           <button mat-icon-button aria-label="Example icon-button with a heart icon" >
+            <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg"(click)="this.ordbut=true;this.ordphone=false;this.pppform.reset()"  >
+           </button>
+             
+           </div  >
+         </div>
+      </mat-card>
+
+
+
+
+      <div class="example-container mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+
+
+          <!-- FirstName Column -->
+          <ng-container matColumnDef="firstname">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fullname </th>
+            <td mat-cell *matCellDef="let row"> {{row.fullname}} </td>
+          </ng-container>
+          <ng-container matColumnDef="fid">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>FID</th>
+            <td mat-cell *matCellDef="let row"> {{row.fid}} </td>
+          </ng-container>
+
+          <!-- lastName Column -->
+          <ng-container matColumnDef="lastname">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> AADHAAR Number </th>
+            <td mat-cell *matCellDef="let row"> {{row.adharno}} </td>
+          </ng-container>
+
+          <!-- Address Column -->
+          <!-- <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+            <td mat-cell *matCellDef="let row"> {{row.address}} </td>
+          </ng-container> -->
+
+
+
+          <!-- Phone Column -->
+
+
+          
+          <ng-container matColumnDef="town">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Town </th>
+            <td mat-cell *matCellDef="let row"> {{row.town}} </td>
+
+          </ng-container>
+
+          <ng-container matColumnDef="village">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Village </th>
+            <td mat-cell *matCellDef="let row"> {{row.village}} </td>
+
+          </ng-container>
+
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Mobile No </th>
+            <td mat-cell *matCellDef="let row"> {{row.phone}} </td>
+
+          </ng-container>
+
+          <!-- Gender Column -->
+
+          <ng-container matColumnDef="land">
+            <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header> LandMulland) </th>
+            <td mat-cell *matCellDef="let row"> {{row.land}}({{row.mulland}}) </td> -->
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Mulberry<br>Land </th>
+            <td mat-cell *matCellDef="let row">{{row.mulland}} </td>
+          </ng-container>
+
+          <!-- Worktype Column -->
+
+          <!-- <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date(DD/MM/YYYY) </th>
+            <td mat-cell *matCellDef="let row"> {{row.odate}} </td>
+          </ng-container> -->
+
+          <!--Salary Column -->
+
+          <!-- <ng-container matColumnDef="culttype">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cultivation type </th>
+            <td mat-cell *matCellDef="let row"> {{row.culttype}} </td>
+          </ng-container> -->
+
+
+
+          <!-- <ng-container matColumnDef="list">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sales Details </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button aria-label="Example icon-button with a heart icon">
+                <mat-icon (click)="showssdetails(row);this.showssaldet=true;this.clearsalesid=row.id">view_list</mat-icon>
+              </button>
+            </td>
+          </ng-container> -->
+          
+
+
+          <ng-container matColumnDef="recpid">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Recipient ID</th>
+            <td mat-cell *matCellDef="let row"> {{row.repid}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="list">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Additional<br>Details</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button aria-label="Example icon-button with a heart icon">
+                <img  height="30" width="30" src="../src/assets/info-black-18dp.svg"(click)="this.showothdet=true;this.showotherdetails=row;showme()">
+             
+              <!-- <mat-icon >info</mat-icon> -->
+                </button> 
+            </td>
+          </ng-container>
+
+
+
+          <!-- Actions(edit and delete) Column -->
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button aria-label="Example icon-button with a heart icon">
+                <img  height="30" width="30" src="../src/assets/edit-black-18dp.svg" (click)="editloaddata(row)">
+              </button>
+              <button mat-icon-button aria-label="Example icon-button with a heart icon">
+                <img  height="30" width="30" src="../src/assets/delete-black-18dp.svg"(click)="ondelete(row.id)">
+              </button>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+
+      </div>
+
+
+      <mat-paginator [pageSizeOptions]="[8, 20, 25, 100]" [pageSize]="8"
+        style="color: black;border-bottom: 2px outset green; " showFirstLastButtons></mat-paginator>
+
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:10%;width:100%;height: 25%"
+      *ngIf=showaddc>
+      <mat-card fxFlex="60" style="border: 2px solid royalblue" >
+
+        <mat-card-title><label class="mat-display-2" style="color: green">{{headstring}} Farmer</label>
+        </mat-card-title>
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="flform">
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Fullname" autocomplete="off" formControlName="fullname">
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="AADHAAR Number" formControlName="adharno" autocomplete="off">
+          </mat-form-field>
+        </form>
+
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="cgvform">
+          <mat-form-field fxFlex="50">
+            <mat-select placeholder="Gender" formControlName="gender">
+              <mat-option value="Primary">Male</mat-option>
+              <mat-option value="Secondary">Female</mat-option>
+              <mat-option value="Secondary">Others</mat-option>
+            </mat-select>
+            <mat-hint align="end">Select Gender</mat-hint>
+          </mat-form-field>
+
+
+          <mat-form-field fxFlex="50">
+            <mat-select placeholder="Caste" formControlName="caste">
+              <mat-option value="Primary">General</mat-option>
+              <mat-option value="Secondary">S.C</mat-option>
+              <mat-option value="Secondary">S.T</mat-option>
+              <mat-option value="Secondary">Min</mat-option>
+              <mat-option value="Secondary">Others</mat-option>
+            </mat-select>
+            <mat-hint align="end">Select Caste</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="FID" formControlName="fid" autocomplete="off">
+          </mat-form-field>
+        </form>
+
+
+        <form fxLayout="row" [formGroup]="sdtform" fxLayoutGap="30px">
+<!--
+    <mat-form-field fxFlex="50">
+            <input matInput placeholder="Taluk" formControlName="town" autocomplete="off">
+          </mat-form-field>
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="State" autocomplete="off" formControlName="state">
+          </mat-form-field>
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="District" autocomplete="off" formControlName="district">
+          </mat-form-field>
+
+<mat-form-field fxFlex="50">
+  <mat-label>District</mat-label>
+  <mat-select formControlName="district">
+    <mat-option *ngFor="let dis of districts " [value]="dis.value">
+      {{dis.value}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+-->
+<mat-form-field  fxFlex="50">
+  <input type="text" placeholder="District" aria-label="District" matInput formControlName="district"  [matAutocomplete]="dauto">
+  <mat-autocomplete #dauto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let doption of dfilteredOptions | async" [value]="doption.value">
+      {{doption.value}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+
+
+<mat-form-field  fxFlex="50">
+  <input type="text" placeholder="Taluk" aria-label="Taluk" matInput formControlName="town"  [matAutocomplete]="tauto">
+  <mat-autocomplete #tauto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let toption of tfilteredOptions | async" [value]="toption.value">
+      {{toption.value}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+
+<!-- <mat-form-field  fxFlex="50">
+  <input type="text" placeholder="Village" aria-label="Village" matInput formControlName="village"  [matAutocomplete]="vauto">
+  <mat-autocomplete #vauto="matAutocomplete" [displayWith]="displayFn" >
+    <mat-option *ngFor="let voption of vfilteredOptions | async" [value]="voption.value">
+      {{voption.value}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field> -->
+
+
+
+<mat-form-field fxFlex="50">
+  <input matInput placeholder="Village" autocomplete="off" formControlName="village">
+</mat-form-field>
+
+
+
+
+
+
+
+
+
+          <!--
+            <mat-form-field fxFlex="50">
+              <mat-label>State</mat-label>
+              <mat-select formControlName="state">
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                  {{food.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field fxFlex="50">
+              <mat-label>District</mat-label>
+              <mat-select formControlName="district">
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                  {{food.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+             -->
+        
+
+        </form>
+
+        <form fxLayout="row" [formGroup]="apform" fxLayoutGap="30px">
+        
+
+      
+
+
+<!-- 
+
+<mat-form-field  fxFlex="50">
+  <input type="text" placeholder="Tsc Location" aria-label="Tsc Location" matInput formControlName="tscloc"  [matAutocomplete]="tscauto">
+  <mat-autocomplete #tscauto="matAutocomplete" [displayWith]="displayFn" >
+    <mat-option *ngFor="let tscoption of tscfilteredOptions | async" [value]="tscoption.value">
+      {{tscoption.value}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field> -->
+
+
+<mat-form-field fxFlex="50">
+  <input matInput placeholder="Tsc Location" autocomplete="off" formControlName="tscloc">
+</mat-form-field>
+
+
+
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Pincode" formControlName="pincode" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Phone Number" formControlName="phone" autocomplete="off" >
+           
+
+          </mat-form-field>
+
+        </form>
+
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="pfform">
+        
+
+
+          <mat-form-field fxFlex="50">
+            <mat-select placeholder="Farmer type(Farming type)" formControlName="fftype">
+              <mat-option value="Primary(Small)">Primary(Small)</mat-option>
+              <mat-option value="Primary(Medium)">Primary(Medium)</mat-option>
+              <mat-option value="Primary(Large)">Primary(Large)</mat-option>
+              <mat-option value="Secondary(Small)">Secondary(Small)</mat-option>
+              <mat-option value="Secondary(Medium)">Secondary(Medium)</mat-option>
+              <mat-option value="Secondary(Large)">Secondary(Large)</mat-option>
+  
+            </mat-select>
+            <mat-hint align="end">Select Farmer type(Farming type)</mat-hint>
+          </mat-form-field>
+
+
+
+          <mat-form-field fxFlex="25">
+            <input matInput placeholder="Total Land" formControlName="land" autocomplete="off">
+          </mat-form-field>
+
+
+        
+        <mat-form-field fxFlex="25">
+          <input matInput placeholder="Mullberry Land" formControlName="mulland" autocomplete="off" >
+        </mat-form-field>
+
+
+
+      </form>
+
+
+
+
+
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="dcform">
+
+
+         
+
+
+          <mat-form-field fxFlex="50">
+            <mat-select placeholder="Plantation type" formControlName="farmtype">
+              <mat-option value="Tree">Tree</mat-option>
+              <mat-option value="4x4">4x4</mat-option>
+              <mat-option value="5x5">5x5</mat-option>
+              <mat-option value="8x8">8x8</mat-option>
+              <mat-option value="10x10">10x10</mat-option>
+              <mat-option value="Others">Others</mat-option>
+
+            </mat-select>
+            <mat-hint align="end">Select Plantaion type</mat-hint>
+          </mat-form-field>
+
+
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Survey#" formControlName="surveyno" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Recipent id" formControlName="repid" autocomplete="off">
+          </mat-form-field>
+
+        </form>
+
+
+<label style="color: green;font-size: 20px;" >Enter Bank Details</label>
+        <form fxLayout="row" fxLayoutGap="30px" [formGroup]="aibform">
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Account no" autocomplete="off" formControlName="accntno">
+          </mat-form-field>
+
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="IFSC no" formControlName="ifscno" autocomplete="off">
+          </mat-form-field>
+          
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="Branch" formControlName="branch" autocomplete="off">
+          </mat-form-field>
+        </form>
+
+
+
+
+
+
+        <mat-card-actions mat-footer-row fxLayout="row" fxLayoutAlign="end end">
+          <button mat-button style="color: black;background-color: whitesmoke" (click)="cancel()">
+            <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+          </button>
+          <button mat-button style="color: black;background-color: orangered"
+            [disabled]="flform.invalid||apform.invalid||pfform.invalid||dcform.invalid||sdtform.invalid||aibform.invalid||cgvform.invalid"
+            (click)="addemp()" *ngIf=showaddemp>
+            <img  height="30" width="30" src="../src/assets/add-black-18dp.svg">{{abs}}
+          </button>
+          <button mat-button style="color: black;background-color: orangered"
+            [disabled]="flform.invalid||apform.invalid||pfform.invalid||dcform.invalid||sdtform.invalid||aibform.invalid||cgvform.invalid"
+            (click)="updatedata()" *ngIf=showup>
+            <img  height="30" width="30" src="../src/assets/add-black-18dp.svg">{{aus}}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+
+    <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:17%;width:100%;height: 25%"
+      *ngIf=showssaldet>
+      <mat-card fxFlex="90" style="border: 2px solid royalblue">
+
+        <mat-card-title><label class="mat-display-2" style="color: green;font-family: lato">{{this.showotherdetails.fullname}} Kulavaru</label>
+        </mat-card-title>
+
+        <mat-card-content>
+          <mat-card>
+            <mat-card-content fxLayout="row" fxLayoutAlign="space-between center"
+              style="margin-left:2%;margin-right:2%;">
+           
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+                <label style="font-size:medium;">Variety</label>
+              </div>
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+                <label style="font-size:medium;">DFLS</label>
+              </div>
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+                <label style="font-size:medium;">Avg</label>
+              </div>
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+                <label style="font-size:medium;">Hatch Date</label>
+              </div>
+              
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+              <label style="font-size:medium;">Dispatched Date</label>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+              <label style="font-size:medium;">Market Date</label>
+            </div>
+
+
+              <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+              <label style="font-size:medium;">LOT Number</label>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+              <label style="font-size:medium;">Subsidy</label>
+            </div>
+             
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="15" >
+              <div fxLayout="column" fxLayoutAlign="start start">
+              <label style="font-size:medium;">Farmer</label>
+              <label style="font-size:medium;">Share</label>
+
+            </div>
+            </div>
+            
+            
+
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <div style="padding:1%"></div>
+            <div class="sales">
+            <div *ngFor="let item of this.showotherdetails.disdetails;let in = index ">
+              <mat-card-content style="margin-left:2%;margin-right:2%;" fxLayout="row"
+                fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="15" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.variety}}</b></label>
+                </div>
+
+                
+                <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.dfls}}</b></label>
+                </div>
+              
+ 
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.avg}}</b></label>
+                </div>
+
+            
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.realhdate}}</b></label>
+                </div>
+
+
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.realddate}}</b></label>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.realmardate}}</b></label>
+                </div>
+           
+              <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.lotno}}</b></label>
+                </div>
+
+                <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.subsidy}}</b></label>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+                  <label style="font-size:120%;font-family: lato;"><b>{{item.fshare}}</b></label>
+                </div>
+               
+              </mat-card-content>
+            </div>
+          </div>
+
+          </mat-card>
+        </mat-card-content>
+        <mat-card-actions>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-button style="color: black;background-color: orangered" (click)="loadreport()" >
+              <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">Download Kulavaru
+            </button>
+
+            <button mat-button style="color: black;background-color: orangered" (click)="this.showbenifits=true;this.showssaldet=false;" >
+              <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">Benifits
+            </button>
+
+            <button mat-button style="color: black;background-color: whitesmoke" (click)="this.showssaldet=false;this.showothdet=true">
+              <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Close
+            </button>
+
+          </div>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
+
+
+
+
+    <div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:17%;width:100%;height: 25%" *ngIf="showothdet"  >
+
+
+    <mat-card fxFlex=60 style="border: 1px solid black;">
+
+       <div fxLayout="row" fxLayoutAlign="start start">
+              <div fxLayout="row" fxLayoutAlign="start end">
+          <mat-card-title><label class="mat-display-3" style="color: green;">{{this.showotherdetails.fullname}}</label>
+          </mat-card-title>
+          &nbsp;&nbsp;
+          <mat-card-subtitle><label style="color: black;font-size: 20px;">{{this.showotherdetails.phone}}</label>
+          </mat-card-subtitle>
+      </div>
+     
+      </div>
+
+      <mat-card-content>
+          <div style="padding-top: 3%;"> </div>
+          <div fxLayout="column" fxLayoutGap="10px">
+
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                
+              <div fxLayout="column" fxLayoutAlign="start start">
+
+                <label style="font-size: 15px;color:black;">District</label>
+                <label style="color: green;font-size: 20px;">{{this.showotherdetails.district}}</label>
+            </div> 
+              <div fxLayout="column" fxLayoutAlign="start start">
+                    <label style="font-size: 15px;color:black;">TSC Location</label>
+                    <label style="color: green;font-size: 20px;">{{this.showotherdetails.tscloc}}</label>
+                </div>
+
+                <div fxLayout="column" fxLayoutAlign="start start">
+
+                    <label style="font-size: 15px;color:black;">Pincode</label>
+                    <label style="color: green;font-size: 20px;">{{this.showotherdetails.pincode}}</label>
+                </div>
+
+            </div>
+
+
+
+
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                
+              <div fxLayout="column" fxLayoutAlign="start start">
+
+                <label style="font-size: 15px;color:black;">Gender</label>
+                <label style="color: green;font-size: 20px;">{{this.showotherdetails.gender}}</label>
+            </div> 
+              <div fxLayout="column" fxLayoutAlign="start start">
+                    <label style="font-size: 15px;color:black;">Caste</label>
+                    <label style="color: green;font-size: 20px;">{{this.showotherdetails.caste}}</label>
+                </div>
+
+                <div fxLayout="column" fxLayoutAlign="start start">
+
+                    <label style="font-size: 15px;color:black;">VoterID#</label>
+                    <label style="color: green;font-size: 20px;">{{this.showotherdetails.voterid}}</label>
+                </div>
+
+            </div>
+
+
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+            
+              <div fxLayout="column" fxLayoutAlign="start start">
+
+                <label style="font-size: 15px;color:black;">FarmType</label>
+                <label style="color: green;font-size: 20px;">{{this.showotherdetails.farmtype}}</label>
+            </div>
+              <div fxLayout="column" fxLayoutAlign="start start">
+                  <label style="font-size: 15px;color:black;">Survey#</label>
+                  <label style="color: green;font-size: 20px;">{{this.showotherdetails.surveyno}}</label>
+              </div>
+
+            
+
+          </div>
+
+
+          
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <label style="font-size: 15px;color:black;">UID</label>
+                <label style="color: green;font-size: 20px;">{{this.showotherdetails.uid}}</label>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="start start">
+
+                <label style="font-size: 15px;color:black;">Registration Date</label>
+                <label style="color: green;font-size: 20px;">{{this.showotherdetails.date|date:'shortDate'}}</label>
+            </div>
+
+        </div>
+
+          <label style="font-size: 20px;color: royalblue;">Bank Details</label>
+              <div fxLayout="row" fxLayoutAlign="space-between center">
+                  <div fxLayout="column" fxLayoutAlign="start start">
+                      <label style="font-size: 15px;color:black;">Account#</label>
+                      <label style="color: green;font-size: 20px;">{{this.showotherdetails.accntno}}</label>
+                  </div>
+
+                  <div fxLayout="column" fxLayoutAlign="start start">
+
+                      <label style="font-size: 15px;color:black;">IFSC Code</label>
+                      <label style="color: green;font-size: 20px;">{{this.showotherdetails.ifscno}}</label>
+                  </div>
+
+
+                  <div fxLayout="column" fxLayoutAlign="start start">
+
+                    <label style="font-size: 15px;color:black;">Branch</label>
+                    <label style="color: green;font-size: 20px;">{{this.showotherdetails.branch}}</label>
+                </div>
+
+              </div>
+            
+              
+            
+           
+
+
+            
+
+
+          </div>
+
+          <mat-card-actions mat-footer-row fxLayout="row" fxLayoutAlign="space-between center">
+           
+            <button mat-button style="color: black;background-color: orangered" (click)="this.showssaldet=true;this.showothdet=false" >
+              <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">Kulavaru
+            </button>
+            <button mat-button style="color: black;background-color: whitesmoke"  (click)="this.showssaldet=false;this.showothdet=false">
+              <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Close
+            </button>
+    
+            
+          </mat-card-actions>
+      </mat-card-content>
+
+  </mat-card>
+</div>
+
+
+
+
+
+<div fxLayout="row" fxLayoutAlign="center start" style="position: absolute;top:17%;width:100%;height: 25%"
+*ngIf="showbenifits" 
+
+>
+<mat-card fxFlex="80" style="border: 2px solid royalblue">
+
+  <mat-card-title><label class="mat-display-2" style="color: green;font-family: lato">{{this.showotherdetails.fullname}} Benifits</label>
+  </mat-card-title>
+
+  <div  fxLayout="row" fxLayoutAlign="end center" >
+    
+    <button mat-fab aria-label="Example icon-button with a heart icon" style="background-color: royalblue;" *ngIf="!getbenifit"
+    (click)="this.getbenifit=true" >
+      <img  height="30" width="30" src="../src/assets/add-black-18dp.svg">
+    </button>
+    
+
+  </div>
+
+<div fxLayout="row"  fxLayoutAlign="center center" *ngIf="getbenifit">
+
+    <form fxLayout="row" fxLayoutGap="30px" [formGroup]="benifitsform">
+
+      <mat-form-field fxFlex="50">
+        <mat-select placeholder="Type" formControlName="type">
+          <mat-option value="Rearing House">Rearing House</mat-option>
+          <mat-option value="Drip Irrigation">Drip Irrigation</mat-option>
+          <mat-option value="Equipments">Equipments</mat-option>
+          <mat-option value="Trunching">Trunching</mat-option>
+
+        </mat-select>
+        <mat-hint align="end">Select Type</mat-hint>
+      </mat-form-field>
+
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Area/Name" autocomplete="off" formControlName="area">
+      </mat-form-field>
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Amount" formControlName="amount" autocomplete="off">
+      </mat-form-field>
+
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Year" formControlName="year" autocomplete="off">
+      </mat-form-field>
+
+    </form>
+
+    <div>
+    <button mat-button style="color: black;background-color: orangered" (click)="addbenifits(this.showotherdetails.id);"   >
+      <img  height="30" width="30" src="../src/assets/view_list-black-18dp.svg">Add Benifit
+    </button>
+    <button mat-button style="color: black;background-color: whitesmoke" (click)="this.getbenifit=false;this.benifitsform.reset();">
+      <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Cancel
+    </button>
+  </div>
+  </div>
+
+
+
+
+
+
+  <div style="padding-bottom: 1%;">
+    
+  </div>
+
+
+  <mat-card-content>
+    <mat-card>
+      <mat-card-content fxLayout="row" fxLayoutAlign="space-between center"
+        style="margin-left:2%;margin-right:2%;">
+     
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+          <label style="font-size:medium;">Type</label>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+          <label style="font-size:medium;">Area/Name</label>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+          <label style="font-size:medium;">Amount</label>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+          <label style="font-size:medium;">Year</label>
+        </div>
+       
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+          <label style="font-size:medium;">Delete</label>
+        </div>
+     
+      
+
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <div style="padding:1%"></div>
+      <div class="benifits">
+      <div *ngFor="let item of this.showotherdetails.benifits;let bin = index ">
+        <mat-card-content style="margin-left:2%;margin-right:2%;" fxLayout="row"
+          fxLayoutAlign="space-between center">
+          <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+            <label style="font-size:120%;font-family: lato;"><b>{{item.type}}</b></label>
+          </div>
+
+          
+          <div fxLayout="column" fxLayoutAlign="center center"  fxFlex="20" >
+            <label style="font-size:120%;font-family: lato;"><b>{{item.area}}</b></label>
+          </div>
+        
+
+          <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+            <label style="font-size:120%;font-family: lato;"><b>{{item.amount}}</b></label>
+          </div>
+
+      
+          <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+            <label style="font-size:120%;font-family: lato;"><b>{{item.year}}</b></label>
+          </div>
+
+
+          <div fxLayout="column" fxLayoutAlign="center center" fxFlex="20" >
+            <button mat-icon-button aria-label="Example icon-button with a heart icon">
+              <img  height="30" width="30" src="../src/assets/delete-black-18dp.svg"(click)="deletebenifit(this.showotherdetails.id,bin)">
+            </button>
+          </div>
+      
+         
+        </mat-card-content>
+      </div>
+    </div>
+
+    </mat-card>
+  </mat-card-content>
+  <mat-card-actions>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      
+
+      <button mat-button style="color: black;background-color: whitesmoke" (click)="this.showssaldet=true;this.showbenifits=false">
+        <img  height="30" width="30" src="../src/assets/cancel-black-18dp.svg">Close
+      </button>
+
+    </div>
+  </mat-card-actions>
+
+</mat-card>
+</div>
+
+
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

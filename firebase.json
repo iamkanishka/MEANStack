@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "grrainoff",
+      "public": "dist/grrainoff",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
